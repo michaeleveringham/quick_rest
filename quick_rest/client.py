@@ -2,8 +2,8 @@ import requests
 from requests.models import Response
 import json
 from csv import DictWriter
-from quick_rest.exceptions import ServerError, ArgumentError, FormatError
-from quick_rest.resources import strdict
+from .exceptions import ServerError, ArgumentError, FormatError
+from .resources import strdict
 
 
 class ServerResponse():

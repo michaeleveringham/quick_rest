@@ -1,7 +1,69 @@
-# quick_rest
-A simple package for interacting with API calls.
-<br><br/>
 
+# `quick_rest`
+A simple utility for any REST API, regardless of authentication type.
 
-# Usage
-_docs coming..._
+## Why?
+Some have asked me why bother when there are so many packages for interacting with REST APIs already.
+
+This is exactly partially why for me, though. I've found every vendor has their own REST API Python package it seems and I just wanted one package to use for all my REST API interfaces.
+
+I'm sure that there are better packages that achieve my goal already but this is the other part of why for me: I just wanted to.
+
+## Dependencies
+`quick_rest` would be nothing without [requests](https://pypi.org/project/requests/). It is an amazing module and the only dependency that isn't built-in with Python and is the backbone of the project.
+
+## Usage
+I am working on getting full documentation up, please bear with me in the meantime. Luckily there isn't much to this package yet.
+
+### Authentication
+You can currently use no authentication, key authentication and JWT authentication. OAuth is a work in progress, please suggest other authentication types to add.
+
+#### No Authentication
+``` python
+from rest_easy import Client
+url = 'https://cat-fact.herokuapp.com/'
+client = Client(url)
+route = 'facts'
+response = client.get(route)
+```
+#### Key
+``` python
+from rest_easy import KeyClient
+url = 'https://www.haloapi.com/'
+creds = {'keyname': 'somekeyhere'}
+client = KeyClient(url, creds)
+route = 'stats/hw2/xp?players=LamerLink' # check out my sweet Halo stats
+response = client.get(route)
+```
+#### JWT (JSON Web Token)
+``` python
+from rest_easy import JWTClient
+url = 'https://some-jwt-client.com/'
+creds = {'username': 'someusername', 'password': 'somepassword'}
+# We need to specify the names for the auth_route, token_name, and jwt_key_name.
+client = JWTClient(url, creds, 'auth', 'access_token', 'Authorization')
+route = 'v0/some/route/results.json'
+response = client.get(route)
+```
+#### OAuth
+``` python
+# Coming soon
+```
+### Results
+Results come in the form of a `ServerResponse` object. You can access the `raw_content` attribute or use the `decode`, `to_txt` and `to_csv` methods to get the data from the object.
+
+``` python
+raw_response = response.raw_response
+decoded_response = response.decode() # utf-8 by default
+decoded_response = response.decode(encoding='utf-16')
+response.to_txt('some/path/file.txt') # dumps the raw response to file
+response.to_csv('some/path/file.csv')
+# By default, to_csv sets \n to lineterminator and writes the header to file
+response.to_csv('some/path/file.csv', lineterminator='\t', omit_header=True)
+```
+
+## Issues/Suggestions
+Please make any suggestions or issues on the Github page. Remember I'm just one person but I'll try to be as quick as I can.
+
+## License
+This project is licensed under the MIT License. Please see the LICENSE.md file for details.

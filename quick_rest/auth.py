@@ -1,6 +1,6 @@
-from quick_rest.client import Client, ServerResponse
-from quick_rest.exceptions import TokenError
-from quick_rest.resources import strdict
+from .client import Client, ServerResponse
+from .exceptions import TokenError
+from .resources import strdict
 
 
 class BasicClient(Client):
