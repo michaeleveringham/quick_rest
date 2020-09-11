@@ -12,6 +12,10 @@ I'm sure that there are better packages that achieve my goal already but this is
 ## Dependencies
 `quick_rest` would be nothing without [requests](https://pypi.org/project/requests/). It is an amazing module and the only dependency that isn't built-in with Python and is the backbone of the project.
 
+## Installation
+Use pip to install.
+`python -m pip install quick_rest`
+
 ## Usage
 I am working on getting full documentation up, please bear with me in the meantime. Luckily there isn't much to this package yet.
 
