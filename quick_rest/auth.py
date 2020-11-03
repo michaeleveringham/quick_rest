@@ -22,9 +22,11 @@ class KeyClient(BasicClient):
 
 
 class JWTClient(Client):
-    def __init__(self, url: str, credentials: dict, auth_route: str, token_name: str, jwt_key_name: str, encoding: str = 'utf-8') -> None:
+    def __init__(self, url: str, credentials: dict, auth_route: str, token_name: str, jwt_key_name: str,
+                 encoding: str = 'utf-8', jwt_prefix: str = '') -> None:
         super().__init__(url, encoding=encoding)
         self.jwt_key_name = jwt_key_name
+        self.jwt_prefix = jwt_prefix
         self.auths = (auth_route, token_name, credentials)
 
     def _authenticate(self, auth_route: str, token_name: str, credentials: dict) -> str:
@@ -36,7 +38,10 @@ class JWTClient(Client):
 
     def _get_jwt(self) -> dict:
         jwt = self._authenticate(*self.auths)
-        return {self.jwt_key_name: f'JWT {jwt}'}
+        if self.jwt_prefix:
+            return {self.jwt_key_name: f'{self.jwt_prefix}{jwt}'}
+        else:
+            return {self.jwt_key_name: jwt}
 
     def get(self, route: str, headers: dict = {}) -> ServerResponse:
         headers = {**self._get_jwt(), **headers}
