@@ -18,7 +18,7 @@ class KeyClient(BasicClient):
 
     def post(self, route: str, headers: dict = {}, data: strdict = '') -> ServerResponse:
         headers = {**self.credentials, **headers}
-        return super().post(route, headers)
+        return super().post(route, headers, data)
 
 
 class JWTClient(Client):
@@ -44,7 +44,7 @@ class JWTClient(Client):
 
     def post(self, route: str, headers: dict = {}, data: strdict = '') -> ServerResponse:
         headers = {**self._get_jwt(), **headers}
-        return super().post(route, headers)
+        return super().post(route, headers, data)
 
 
 class OAuthClient(JWTClient):
