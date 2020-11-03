@@ -24,7 +24,7 @@ You can currently use no authentication, key authentication and JWT authenticati
 
 #### No Authentication
 ``` python
-from rest_easy import Client
+from quick_rest import Client
 url = 'https://cat-fact.herokuapp.com/'
 client = Client(url)
 route = 'facts'
@@ -32,7 +32,7 @@ response = client.get(route)
 ```
 #### Key
 ``` python
-from rest_easy import KeyClient
+from quick_rest import KeyClient
 url = 'https://www.haloapi.com/'
 creds = {'keyname': 'somekeyhere'}
 client = KeyClient(url, creds)
@@ -41,7 +41,7 @@ response = client.get(route)
 ```
 #### JWT (JSON Web Token)
 ``` python
-from rest_easy import JWTClient
+from quick_rest import JWTClient
 url = 'https://some-jwt-client.com/'
 creds = {'username': 'someusername', 'password': 'somepassword'}
 # We need to specify the names for the auth_route, token_name, and jwt_key_name.
