@@ -17,7 +17,9 @@ Use pip to install.
 `python -m pip install quick_rest`
 
 ## Usage
-I am working on getting full documentation up, please bear with me in the meantime. Luckily there isn't much to this package yet.
+There isn't much to this package so I haven't written full documentation yet. 
+
+You can get and post right now, and use the auth methods listed below. You can pass any `requests` `get` or `post` kwarg in on the `Client.get` and `Client.post` methods.
 
 ### Authentication
 You can currently use no authentication, key authentication and JWT authentication. OAuth is a work in progress, please suggest other authentication types to add.

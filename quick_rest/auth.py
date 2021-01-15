@@ -4,13 +4,15 @@ from .resources import strdict
 
     
 class BasicClient(Client):
-    def __init__(self, url: str, credentials: dict, encoding: str = 'utf-8'):
-        super().__init__(url, encoding=encoding)
+    def __init__(self, url: str, credentials: dict, encoding: str = 'utf-8',
+                 verify: bool = True) -> None:
+        super().__init__(url, encoding=encoding, verify=verify)
         self.credentials = credentials
 
 class KeyClient(BasicClient):
-    def __init__(self, url: str, credentials: dict, encoding: str = 'utf-8'):
-        super().__init__(url, credentials=credentials, encoding=encoding)
+    def __init__(self, url: str, credentials: dict, encoding: str = 'utf-8',
+                 verify: bool = True) -> None:
+        super().__init__(url, credentials=credentials, encoding=encoding, verify=verify)
 
     def get(self, route: str, **kwargs) -> ServerResponse:
         headers, kwargs = self._sanitize_kwargs(kwargs)
@@ -24,9 +26,10 @@ class KeyClient(BasicClient):
 
 
 class JWTClient(Client):
-    def __init__(self, url: str, credentials: dict, auth_route: str, token_name: str, jwt_key_name: str,
-                 encoding: str = 'utf-8', jwt_prefix: str = '') -> None:
-        super().__init__(url, encoding=encoding)
+    def __init__(self, url: str, credentials: dict, auth_route: str, token_name: str,
+                 jwt_key_name: str, encoding: str = 'utf-8', jwt_prefix: str = '',
+                 verify: bool = True) -> None:
+        super().__init__(url, encoding=encoding, verify=verify)
         self.jwt_key_name = jwt_key_name
         self.jwt_prefix = jwt_prefix
         self.auths = (auth_route, token_name, credentials)
