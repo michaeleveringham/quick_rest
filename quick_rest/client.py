@@ -38,9 +38,16 @@ class ServerResponse():
 
 
 class Client():
-    def __init__(self, url: str, encoding: str = 'utf-8') -> None:
+    def __init__(self, url: str, encoding: str = 'utf-8', verify: bool = True) -> None:
         self.url = url
         self.encoding = encoding
+        self.verify = verify
+
+    def _sanitize_kwargs(self, kwargs):
+        headers = {}
+        if 'headers' in kwargs.keys():
+            headers.update(kwargs.pop('headers'))
+        return headers, kwargs
 
     def _handle_response(self, response: Response) -> ServerResponse:
         code = str(response.status_code)[:1]
@@ -49,29 +56,32 @@ class Client():
         else:
             return ServerResponse(response, encoding=self.encoding)
 
-    def _call_api_get(self, route: str, headers: dict = {}) -> ServerResponse:
+    def _call_api_get(self, route: str, **kwargs) -> ServerResponse:
         url = f'{self.url}{route}'
-        response = requests.get(url, headers=headers, verify=True)
+        response = requests.get(url, verify=self.verify, **kwargs)
         return self._handle_response(response)
 
-    def _call_api_post(self, route: str, headers: dict = {}, json_data: dict = {}, text_data: str = '') -> ServerResponse:
+    def _call_api_post(self, route: str, json_data: dict = {}, text_data: str = '', **kwargs) -> ServerResponse:
         url = f'{self.url}{route}'
         if json_data:
-            response = requests.post(url, headers=headers, json=json_data, verify=True)
+            response = requests.post(url, json=json_data, verify=self.verify, **kwargs)
         elif text_data:
+            headers = {}
+            if 'headers' in kwargs.keys():
+                headers.update(kwargs.pop('headers'))
             headers["Content-Type"] = "text/plain"
-            response = requests.post(url, headers=headers, data=text_data, verify=True)
+            response = requests.post(url, data=text_data, verify=self.verify, **kwargs)
         else:
             raise ArgumentError('Missing arg, need either "json_data" or "text_data".')
         return self._handle_response(response)
 
-    def get(self, route: str, headers: dict = {}) -> ServerResponse:
-        return self._call_api_get(route, headers=headers)
+    def get(self, route: str, **kwargs) -> ServerResponse:
+        return self._call_api_get(route, **kwargs)
 
-    def post(self, route: str, headers: dict = {}, data: strdict = '') -> ServerResponse:
+    def post(self, route: str, data: strdict = '', **kwargs) -> ServerResponse:
         if isinstance(data, dict):
-            return self._call_api_post(route, headers=headers, json_data=data)
+            return self._call_api_post(route, json_data=data, **kwargs)
         elif isinstance(data, str):
-            return self._call_api_post(route, headers=headers, text_data=data)
+            return self._call_api_post(route, text_data=data, **kwargs)
         else:
             raise ArgumentError('Argument "data" must be of type either either "str" or "dict".')

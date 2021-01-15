@@ -2,7 +2,7 @@ from .client import Client, ServerResponse
 from .exceptions import TokenError
 from .resources import strdict
 
-
+    
 class BasicClient(Client):
     def __init__(self, url: str, credentials: dict, encoding: str = 'utf-8'):
         super().__init__(url, encoding=encoding)
@@ -12,13 +12,15 @@ class KeyClient(BasicClient):
     def __init__(self, url: str, credentials: dict, encoding: str = 'utf-8'):
         super().__init__(url, credentials=credentials, encoding=encoding)
 
-    def get(self, route: str, headers: dict = {}) -> ServerResponse:
+    def get(self, route: str, **kwargs) -> ServerResponse:
+        headers, kwargs = self._sanitize_kwargs(kwargs)
         headers = {**self.credentials, **headers}
-        return super().get(route, headers)
+        return super().get(route, headers=headers, **kwargs)
 
-    def post(self, route: str, headers: dict = {}, data: strdict = '') -> ServerResponse:
+    def post(self, route: str, data: strdict = '', **kwargs) -> ServerResponse:
+        headers, kwargs = self._sanitize_kwargs(kwargs)
         headers = {**self.credentials, **headers}
-        return super().post(route, headers, data)
+        return super().post(route, data, headers=headers, **kwargs)
 
 
 class JWTClient(Client):
@@ -43,13 +45,15 @@ class JWTClient(Client):
         else:
             return {self.jwt_key_name: jwt}
 
-    def get(self, route: str, headers: dict = {}) -> ServerResponse:
+    def get(self, route: str, **kwargs) -> ServerResponse:
+        headers, kwargs = self._sanitize_kwargs(kwargs)
         headers = {**self._get_jwt(), **headers}
-        return super().get(route, headers)
+        return super().get(route, headers=headers, **kwargs)
 
-    def post(self, route: str, headers: dict = {}, data: strdict = '') -> ServerResponse:
+    def post(self, route: str, data: strdict = '', **kwargs) -> ServerResponse:
+        headers, kwargs = self._sanitize_kwargs(kwargs)
         headers = {**self._get_jwt(), **headers}
-        return super().post(route, headers, data)
+        return super().post(route, data, headers=headers, **kwargs)
 
 
 class OAuthClient(JWTClient):
