@@ -17,7 +17,7 @@ Use pip to install.
 `python -m pip install quick_rest`
 
 ## Usage
-There isn't much to this package so I haven't written full documentation yet. 
+There isn't much to this package so I haven't written full documentation yet.
 
 You can get and post right now, and use the auth methods listed below. You can pass any `requests` `get` or `post` kwarg in on the `Client.get` and `Client.post` methods.
 
@@ -56,12 +56,13 @@ response = client.get(route)
 # Coming soon
 ```
 ### Results
-Results come in the form of a `ServerResponse` object. You can access the `raw_content` attribute or use the `decode`, `to_txt` and `to_csv` methods to get the data from the object.
+Results come in the form of a `ServerResponse` object. You can access the `raw_content` attribute or use the `decode`, `get_value`, `to_txt` and `to_csv` methods to get the data from the object.
 
 ``` python
 raw_response = response.raw_response
 decoded_response = response.decode() # utf-8 by default
 decoded_response = response.decode(encoding='utf-16')
+value = response.get_value(key_name)
 response.to_txt('some/path/file.txt') # dumps the raw response to file
 response.to_csv('some/path/file.csv')
 # By default, to_csv sets \n to lineterminator and writes the header to file
