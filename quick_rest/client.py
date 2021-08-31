@@ -54,9 +54,10 @@ class ServerResponse():
 
 class Client():
     def __init__(self, url: str, encoding: str = 'utf-8', verify: bool = True,
-                 values_key = '') -> None:
+                 values_key: str = '', ignore_errors: bool = False) -> None:
         self.url = url
         self.encoding = encoding
+        self.ignore_errors = ignore_errors
         self.verify = verify
         if not verify:
             requests.packages.urllib3.disable_warnings(
@@ -72,8 +73,8 @@ class Client():
 
     def _handle_response(self, response: Response) -> ServerResponse:
         code = str(response.status_code)[:1]
-        if code not in ('2', '3'):
-            raise ServerError(f'{response.status_code}: {response.reason}')
+        if code not in ('2', '3') and not self.ignore_errors:
+            raise ServerError(f'{response.status_code}: {response.reason} {response.text}')
         else:
             return ServerResponse(response, encoding=self.encoding,
                                   values_key=self.values_key)
