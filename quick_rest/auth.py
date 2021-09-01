@@ -2,7 +2,7 @@ from .client import Client, ServerResponse
 from .exceptions import TokenError
 from .resources import strdict
 
-    
+
 class BasicClient(Client):
     def __init__(self, url: str, credentials: dict, encoding: str = 'utf-8',
                  verify: bool = True) -> None:
@@ -39,7 +39,11 @@ class JWTClient(Client):
         if token_name in token_dict:
             return str(token_dict[token_name])
         else:
-            raise TokenError(f'Invalid token name: {token_name}\nServer response: {token_dict}')
+            error = (
+                'Token not found or invalid token name '
+                f'"{token_name}".\nServer response: {token_dict}'
+                )
+            raise TokenError(error)
 
     def _get_jwt(self) -> dict:
         jwt = self._authenticate(*self.auths)
