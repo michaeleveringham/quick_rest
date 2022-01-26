@@ -4,15 +4,30 @@ from .resources import strdict
 
 
 class BasicClient(Client):
-    def __init__(self, url: str, credentials: dict, encoding: str = 'utf-8',
-                 verify: bool = True) -> None:
+    def __init__(
+        self,
+        url: str,
+        credentials: dict,
+        encoding: str = 'utf-8',
+        verify: bool = True
+    ) -> None:
         super().__init__(url, encoding=encoding, verify=verify)
         self.credentials = credentials
 
 class KeyClient(BasicClient):
-    def __init__(self, url: str, credentials: dict, encoding: str = 'utf-8',
-                 verify: bool = True) -> None:
-        super().__init__(url, credentials=credentials, encoding=encoding, verify=verify)
+    def __init__(
+        self,
+        url: str,
+        credentials: dict,
+        encoding: str = 'utf-8',
+        verify: bool = True
+    ) -> None:
+        super().__init__(
+            url,
+            credentials=credentials,
+            encoding=encoding,
+            verify=verify
+        )
 
     def get(self, route: str, **kwargs) -> ServerResponse:
         headers, kwargs = self._sanitize_kwargs(kwargs)
@@ -26,23 +41,39 @@ class KeyClient(BasicClient):
 
 
 class JWTClient(Client):
-    def __init__(self, url: str, credentials: dict, auth_route: str, token_name: str,
-                 jwt_key_name: str, encoding: str = 'utf-8', jwt_prefix: str = '',
-                 verify: bool = True) -> None:
+    def __init__(
+        self,
+        url: str,
+        credentials: dict,
+        auth_route: str,
+        token_name: str,
+        jwt_key_name: str,
+        encoding: str = 'utf-8',
+        jwt_prefix: str = '',
+        verify: bool = True
+    ) -> None:
         super().__init__(url, encoding=encoding, verify=verify)
         self.jwt_key_name = jwt_key_name
         self.jwt_prefix = jwt_prefix
         self.auths = (auth_route, token_name, credentials)
 
-    def _authenticate(self, auth_route: str, token_name: str, credentials: dict) -> str:
-        token_dict = self._call_api_post(auth_route, json_data=credentials).decode()
+    def _authenticate(
+        self,
+        auth_route: str,
+        token_name: str,
+        credentials: dict
+    ) -> str:
+        token_dict = self._call_api_post(
+            auth_route,
+            json_data=credentials
+        ).decode()
         if token_name in token_dict:
             return str(token_dict[token_name])
         else:
             error = (
                 'Token not found or invalid token name '
                 f'"{token_name}".\nServer response: {token_dict}'
-                )
+            )
             raise TokenError(error)
 
     def _get_jwt(self) -> dict:
@@ -64,5 +95,12 @@ class JWTClient(Client):
 
 
 class OAuthClient(JWTClient):
-    def __init__(self, url: str, auth_route: str, token_name: str, credentials: dict, encoding: str = 'utf-8'):
-        pass
+    def __init__(
+        self,
+        url: str,
+        auth_route: str,
+        token_name: str,
+        credentials: dict,
+        encoding: str = 'utf-8'
+    ):
+        raise NotImplementedError('OAuth not yet supported.')
