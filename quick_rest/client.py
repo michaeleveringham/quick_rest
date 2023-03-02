@@ -1,10 +1,13 @@
-import requests
-from requests.models import Response
 import json
 from csv import DictWriter
-from typing import Any
-from .exceptions import ServerError, ArgumentError, FormatError
-from .resources import strdict
+from typing import Any, Tuple
+
+import requests
+from requests.models import Response
+
+from quick_rest.exceptions import ServerError, ArgumentError, FormatError
+from quick_rest.resources import strdict
+
 
 
 class ServerResponse():
@@ -37,8 +40,12 @@ class ServerResponse():
                 key = self.values_key
         return self.decode()[key]
 
-    def to_csv(self, export_path: str, lineterminator: str = '\n',
-               omit_header: bool = False) -> None:
+    def to_csv(
+        self,
+        export_path: str,
+        lineterminator: str = '\n',
+        omit_header: bool = False
+    ) -> None:
         response = self.decode()
         if len(response) == 1 and isinstance(response, dict):
             data = response[list(response.keys())[0]]
@@ -80,13 +87,13 @@ class Client():
         self.encoding = encoding
         self.ignore_errors = ignore_errors
         self.verify = verify
-        if not verify:
+        if not verify and ignore_errors:
             requests.packages.urllib3.disable_warnings(
                 requests.packages.urllib3.exceptions.InsecureRequestWarning
             )
         self.values_key = values_key
 
-    def _sanitize_kwargs(self, kwargs):
+    def _sanitize_kwargs(self, kwargs) -> Tuple[dict]:
         headers = {}
         if 'headers' in kwargs.keys():
             headers.update(kwargs.pop('headers'))

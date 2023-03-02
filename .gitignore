@@ -2,4 +2,3 @@ build/
 dist/
 quick_rest/__pycache__
 quick_rest.egg-info/
-setup.py
