@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="quick_rest",
-    version="0.1.8",
+    version="0.1.9",
     author="Michael Everingham",
     author_email="lamerlink@live.com",
     description="A versatile wrapper for REST APIs.",
